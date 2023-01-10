@@ -23,6 +23,7 @@ class InvoicesController < ApplicationController
   def create
     @invoice = Invoice.new(invoice_params)
     @invoice.body = JSON.parse invoice_params[:body].read
+    @invoice.title = invoice_params[:body].original_filename if @invoice.title.blank?
 
     respond_to do |format|
       if @invoice.save

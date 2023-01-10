@@ -55,13 +55,13 @@
   <br>
   Total amount:
   <b>
-    <%= number_to_currency data[:total_amount], unit: "din", format: "%n%u" %>
+    <%= number_to_currency data[:total_amount], unit: "din", format: "%n %u" %>
   </b>
   <br>
   <% sum.each do |key, value| %>
-    <%= key %>
+    <%= key %>:
     <b>
-    <%= number_to_currency value, unit: "din", format: "%n%u" %>
+    <%= number_to_currency value, unit: "din", format: "%n %u" %>
     </b>
   <% end %>
 </div>

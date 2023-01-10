@@ -2,13 +2,13 @@
 
 <h1>Invoices</h1>
 
+<%= link_to "New invoice", new_invoice_path %>
+
 <div id="invoices">
-  <% @invoices.each do |invoice| %>
-    <%= render invoice %>
+  <% @invoices.order(created_at: :desc).each do |invoice| %>
     <p>
-      <%= link_to "Show this invoice", invoice %>
+    <%= render invoice %>
+    <%= link_to "Show this invoice", invoice %>
     </p>
   <% end %>
 </div>
-
-<%= link_to "New invoice", new_invoice_path %>
