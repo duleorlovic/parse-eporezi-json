@@ -9,7 +9,7 @@
 
 <%= form_with url: @invoice, method: :get do |f| %>
   <%= f.text_field :filter, value: params[:filter], placeholder: "Filter" %>
-  <%= f.submit %>
+  <%= f.submit "Search" %>
 <% end %>
 <% sum = {} %>
 <% data = {
