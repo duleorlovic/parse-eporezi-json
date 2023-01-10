@@ -18,7 +18,7 @@
   } %>
 
 <% @invoice.body.each do |invoice_body| %>
-  <% next unless invoice_body.to_s.match params[:filter] %>
+  <% next unless invoice_body.to_s.match(params[:filter] || "") %>
   <% data[:total_number_of_invoices] += 1 %>
   <%= ::Helpers.safe_dig invoice_body, %w[SDCTime_ServerTimeZone] %>
   <% invoice_body["Payments"].each do |payment_item| %>
