@@ -1,0 +1,67 @@
+<p style="color: green"><%= notice %></p>
+<div>
+  <%= link_to "Back to invoices", invoices_path %>
+
+  <%= button_to "Destroy this invoice", @invoice, method: :delete %>
+</div>
+
+<%= render @invoice %>
+
+<%= form_with url: @invoice, method: :get do |f| %>
+  <%= f.text_field :filter, value: params[:filter], placeholder: "Filter" %>
+  <%= f.submit %>
+<% end %>
+<% sum = {} %>
+<% data = {
+  total_amount: 0,
+  total_number_of_invoices: 0,
+  } %>
+
+<% @invoice.body.each do |invoice_body| %>
+  <% next unless invoice_body.to_s.match params[:filter] %>
+  <% data[:total_number_of_invoices] += 1 %>
+  <%= ::Helpers.safe_dig invoice_body, %w[SDCTime_ServerTimeZone] %>
+  <% invoice_body["Payments"].each do |payment_item| %>
+    <b>
+      <%= payment_item["Amount"] %>
+    </b>
+    <% data[:total_amount] += payment_item["Amount"] %>
+  <% end %>
+  <%= invoice_body["InvoiceNumber"] %>
+  <% invoice_body["TaxItems"].each do |tax_item| %>
+    <span>
+      (
+      <%= ::Helpers.safe_dig tax_item, %w[Label] %>
+      <%= ::Helpers.safe_dig tax_item, %w[Rate] %>
+      <b>
+      <%= ::Helpers.safe_dig tax_item, %w[Amount] %>
+      </b>
+      )
+    </span>
+    <% sum[tax_item["Label"]] = sum[tax_item["Label"]].to_f + tax_item["Amount"] %>
+  <% end %>
+  <ul>
+  <% invoice_body["Items"].each do |invoice_item| %>
+    <li>
+      <%= ::Helpers.safe_dig invoice_item, %w[Name] %>
+      <%= ::Helpers.safe_dig invoice_item, %w[Name] %>
+    </li>
+  <% end %>
+  </ul>
+<% end %>
+<div style="position:absolute; top:10px;right:100px">
+  Total number of invoices:
+  <%= data[:total_number_of_invoices] %>
+  <br>
+  Total amount:
+  <b>
+    <%= number_to_currency data[:total_amount], unit: "din", format: "%n%u" %>
+  </b>
+  <br>
+  <% sum.each do |key, value| %>
+    <%= key %>
+    <b>
+    <%= number_to_currency value, unit: "din", format: "%n%u" %>
+    </b>
+  <% end %>
+</div>
